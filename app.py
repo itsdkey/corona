@@ -2,8 +2,6 @@ import dash
 import dash_core_components as dcc
 import dash_html_components as html
 
-from requests import Session
-
 external_stylesheets = ['https://codepen.io/chriddyo/pen/bWLwgP.css']
 
 app = dash.Dash(__name__, external_stylesheets=external_stylesheets)
@@ -88,24 +86,43 @@ cases = get_cases()
 recoveries = get_recoveries()
 deaths = get_deaths()
 
-app.layout = html.Div(children=[
-    html.H1(children='Wykres zarażonych przez covid-19.'),
-    html.Div(children='Prosta aplikacja dostarczona za pomocą frameworka Dash python.'),
-    dcc.Graph(
-        id='example-graph',
-        figure={
-            'data': [
-                {'x': list(cases.keys()), 'y': list(cases.values()), 'type': 'line', 'name': 'przypadki', 'marker': {'color': 'blue'}},
-                {'x': list(recoveries.keys()), 'y': list(recoveries.values()), 'type': 'line', 'name': 'wyleczeni', 'marker': {'color': '#00ff00'}},
-                {'x': list(deaths.keys()), 'y': list(deaths.values()), 'type': 'line', 'name': 'zgony', 'marker': {'color': 'red'}},
-            ],
-            'layout': {
-                'title': 'Wykres zarażonych',
-                'xaxis': {'type': 'date'},
+app.layout = html.Div(
+    children=[
+        html.H1(children='Wykres zarażonych przez covid-19.'),
+        html.Div(children='Prosta aplikacja dostarczona za pomocą frameworka Dash python.'),
+        dcc.Graph(
+            id='example-graph',
+            figure={
+                'data': [
+                    {
+                        'x': list(cases.keys()),
+                        'y': list(cases.values()),
+                        'type': 'line',
+                        'name': 'przypadki',
+                        'marker': {'color': 'blue'},
+                    },
+                    {
+                        'x': list(recoveries.keys()),
+                        'y': list(recoveries.values()),
+                        'type': 'line', 'name': 'wyleczeni',
+                        'marker': {'color': '#00ff00'},
+                    },
+                    {
+                        'x': list(deaths.keys()),
+                        'y': list(deaths.values()),
+                        'type': 'line',
+                        'name': 'zgony',
+                        'marker': {'color': 'red'},
+                    },
+                ],
+                'layout': {
+                    'title': 'Wykres zarażonych',
+                    'xaxis': {'type': 'date'},
+                },
             },
-        }
-    )
-])
+        ),
+    ],
+)
 
 
 if __name__ == '__main__':
