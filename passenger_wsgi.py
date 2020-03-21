@@ -1,8 +1,6 @@
 import os
 import sys
 sys.path.append(os.getcwd())
-from manage import app  # noqa
+from app.application import get_app  # noqa
 
-
-if __name__ == '__main__':
-    app.run_server()
+application = get_app()
