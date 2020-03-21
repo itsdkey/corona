@@ -2,11 +2,12 @@ from dash import Dash
 import dash_core_components as dcc
 import dash_html_components as html
 
-from app.handlers import read_from_csv
+from app.handlers import read_from_csv, unpack_csv_data
 
 
 def get_app():
-    data_sets = read_from_csv()
+    csv_data = read_from_csv()
+    data_sets = unpack_csv_data(csv_data)
     app = Dash(__name__, external_stylesheets=['https://codepen.io/chriddyo/pen/bWLwgP.css'])
     app.layout = html.Div(
         children=[

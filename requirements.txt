@@ -1,6 +1,8 @@
 beautifulsoup4
+celery[redis]
 dash
 gitlint
 isort
 pre-commit
+python-dotenv
 requests

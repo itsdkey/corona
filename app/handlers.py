@@ -31,7 +31,6 @@ def read_from_csv() -> dict:
                 'recovered': row['recovered'],
                 'deaths': row['deaths'],
             }
-    data = unpack_csv_data(data)
     return data
 
 
