@@ -1,4 +1,4 @@
-import dash
+from dash import Dash
 import dash_core_components as dcc
 import dash_html_components as html
 
@@ -7,7 +7,7 @@ from app.handlers import read_from_csv
 
 def get_app():
     data_sets = read_from_csv()
-    app = dash.Dash(__name__, external_stylesheets=['https://codepen.io/chriddyo/pen/bWLwgP.css'])
+    app = Dash(__name__, external_stylesheets=['https://codepen.io/chriddyo/pen/bWLwgP.css'])
     app.layout = html.Div(
         children=[
             html.H1(children='Wykres zarażonych przez covid-19.'),
