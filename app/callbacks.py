@@ -2,6 +2,7 @@ from datetime import datetime
 
 import plotly.graph_objs as go
 
+from .calculations import calculate_growth_factor
 from .handlers import read_from_csv, unpack_csv_data
 
 
@@ -48,6 +49,13 @@ def update_graphs(n):
 
 
 def update_metrics(n):
-    """Update text."""
+    """Update 'update text'."""
     now = datetime.now().strftime('%d %b %Y %H:%M:%S')
     return f'Ostatnia aktualizacja o: {now}'
+
+
+def update_datatable(n):
+    """Update data table."""
+    data = read_from_csv()
+    data = calculate_growth_factor(data)
+    return [{'date': key, **value} for key, value in data.items()]
