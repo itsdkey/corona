@@ -1,14 +1,17 @@
 from dash import Dash
+from dash_table import DataTable
 import dash_core_components as dcc
 import dash_html_components as html
 from dash.dependencies import Input, Output
 
-from app.callbacks import update_graphs, update_metrics
+from app.callbacks import update_graphs, update_metrics, update_datatable
+from app.calculations import calculate_growth_factor
 from app.handlers import read_from_csv, unpack_csv_data
 
 
 def get_app():
     csv_data = read_from_csv()
+    csv_data = calculate_growth_factor(csv_data)
     data_sets = unpack_csv_data(csv_data)
     app = Dash(__name__, external_stylesheets=['https://codepen.io/chriddyo/pen/bWLwgP.css'])
     app.layout = html.Div(
@@ -17,6 +20,10 @@ def get_app():
             html.Div(
                 id='subtitle',
                 children='Prosta aplikacja dostarczona za pomocą frameworka Dash python.',
+            ),
+            html.Div(
+                id='live-update-text',
+                children='Ostatnia aktualizacja o: ',
             ),
             dcc.Graph(
                 id='live-update-graph',
@@ -49,8 +56,21 @@ def get_app():
                 },
             ),
             html.Div(
-                id='live-update-text',
-                children='Ostatnia aktualizacja o: ',
+                DataTable(
+                    id='live-update-datatable',
+                    style_cell={'textAlign': 'center'},
+                    columns=[
+                        {'name': i[1], 'id': i[0]}
+                        for i in [
+                            ('date', 'data'),
+                            ('cases', 'przypadki'),
+                            ('growth_factor', 'współczynnik wzrostu'),
+                            ('recovered', 'wyzdrowiali'),
+                            ('deaths', 'zgony'),
+                        ]
+                    ],
+                    data=[{'date': key, **value} for key, value in csv_data.items()],
+                ),
             ),
             dcc.Interval(
                 id='interval-component',
@@ -68,5 +88,9 @@ def get_app():
         Output('live-update-graph', 'figure'),
         [Input('interval-component', 'n_intervals')],
     )(update_graphs)
+    app.callback(
+        Output('live-update-datatable', 'data'),
+        [Input('interval-component', 'n_intervals')],
+    )(update_datatable)
 
     return app

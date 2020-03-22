@@ -1,4 +1,5 @@
 import csv
+from collections import OrderedDict
 from datetime import date
 
 from bs4 import BeautifulSoup
@@ -19,17 +20,17 @@ def write_to_csv() -> None:
             writer.writerow({'date': key, **value})
 
 
-def read_from_csv() -> dict:
+def read_from_csv() -> OrderedDict:
     """Read data from a csv file."""
-    data = {}
+    data = OrderedDict()
     with open('corona.csv', newline='') as csvfile:
         reader = csv.DictReader(csvfile)
         for row in reader:
             date = row['date']
             data[date] = {
-                'cases': row['cases'],
-                'recovered': row['recovered'],
-                'deaths': row['deaths'],
+                'cases': int(row['cases']),
+                'recovered': int(row['recovered']),
+                'deaths': int(row['deaths']),
             }
     return data
 
@@ -57,8 +58,8 @@ def get_actual_state() -> dict:
     return gathered_data
 
 
-def unpack_csv_data(csv_data: dict) -> dict:
-    """Unpack data from a csv to 3 datasets.
+def unpack_csv_data(csv_data: OrderedDict) -> dict:
+    """Unpack data from a csv to 3 data sets.
 
     :param csv_data: data from a csv file
     """
