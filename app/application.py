@@ -1,7 +1,9 @@
 from dash import Dash
 import dash_core_components as dcc
 import dash_html_components as html
+from dash.dependencies import Input, Output
 
+from app.callbacks import update_graphs, update_metrics
 from app.handlers import read_from_csv, unpack_csv_data
 
 
@@ -10,11 +12,14 @@ def get_app():
     data_sets = unpack_csv_data(csv_data)
     app = Dash(__name__, external_stylesheets=['https://codepen.io/chriddyo/pen/bWLwgP.css'])
     app.layout = html.Div(
-        children=[
-            html.H1(children='Wykres zarażonych przez covid-19.'),
-            html.Div(children='Prosta aplikacja dostarczona za pomocą frameworka Dash python.'),
+        html.Div([
+            html.H1(id='title', children='Wykres zarażonych przez covid-19.'),
+            html.Div(
+                id='subtitle',
+                children='Prosta aplikacja dostarczona za pomocą frameworka Dash python.',
+            ),
             dcc.Graph(
-                id='example-graph',
+                id='live-update-graph',
                 figure={
                     'data': [
                         {
@@ -43,6 +48,25 @@ def get_app():
                     },
                 },
             ),
-        ],
+            html.Div(
+                id='live-update-text',
+                children='Ostatnia aktualizacja o: ',
+            ),
+            dcc.Interval(
+                id='interval-component',
+                interval=1000 * 60 * 15,
+                n_intervals=0,
+            ),
+        ]),
     )
+
+    app.callback(
+        Output('live-update-text', 'children'),
+        [Input('interval-component', 'n_intervals')],
+    )(update_metrics)
+    app.callback(
+        Output('live-update-graph', 'figure'),
+        [Input('interval-component', 'n_intervals')],
+    )(update_graphs)
+
     return app
