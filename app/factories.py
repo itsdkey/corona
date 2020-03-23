@@ -1,7 +1,16 @@
+import os
+
 from plotly.graph_objs import Figure, Scatter
 
 from .calculations import calculate_growth_factor
 from .handlers import read_from_csv, unpack_csv_data
+from .settings import BASE_DIR
+
+
+def build_template_index():
+    with open(os.path.join(BASE_DIR, 'index.html')) as index_file:
+        index = index_file.read()
+    return index
 
 
 def build_cases_figure() -> Figure:
