@@ -1,5 +1,5 @@
-from decimal import Decimal, ROUND_HALF_UP
 from collections import OrderedDict
+from decimal import ROUND_HALF_UP, Decimal
 
 
 def calculate_growth_factor(data: OrderedDict) -> OrderedDict:

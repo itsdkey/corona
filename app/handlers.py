@@ -1,5 +1,5 @@
-import csv
 from collections import OrderedDict
+import csv
 from datetime import date
 
 from bs4 import BeautifulSoup
