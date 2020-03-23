@@ -63,10 +63,10 @@ def get_app():
                         {'name': i[1], 'id': i[0]}
                         for i in [
                             ('date', 'data'),
-                            ('cases', 'przypadki'),
+                            ('cases', 'łączna liczba przypadków'),
                             ('growth_factor', 'współczynnik wzrostu'),
-                            ('recovered', 'wyzdrowiali'),
-                            ('deaths', 'zgony'),
+                            ('recovered', 'łączna liczba wyzdrowiało'),
+                            ('deaths', 'łączna liczba zgonów'),
                         ]
                     ],
                     data=[{'date': key, **value} for key, value in csv_data.items()],
