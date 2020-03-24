@@ -38,7 +38,30 @@ def get_app() -> Dash:
             html.Div(
                 DataTable(
                     id='live-update-datatable',
+                    style_data_conditional=[
+                        {
+                            'if': {'row_index': 'odd'},
+                            'backgroundColor': 'rgb(248, 248, 248)',
+                        },
+                        {
+                            'if': {
+                                'column_id': 'growth_factor',
+                                'filter_query': '{growth_factor} <= 1.1',
+                            },
+                            'color': 'green',
+                            'fontWeight': 'bold',
+                        },
+                    ],
+                    style_header={
+                        'backgroundColor': 'rgb(230, 230, 230)',
+                        'fontWeight': 'bold',
+                    },
                     style_cell={'textAlign': 'center'},
+                    style_table={
+                        'overflowX': 'scroll',
+                        'maxHeight': '300px',
+                        'overflowY': 'scroll',
+                    },
                     columns=[{'id': data_key, 'name': column_name} for data_key, column_name in COLUMN_TRANSLATION],
                     data=build_cases_datatable_data(),
                 ),
