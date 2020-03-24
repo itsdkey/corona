@@ -9,6 +9,6 @@ COLUMN_TRANSLATION = [
     ('date', 'data'),
     ('cases', 'łączna liczba przypadków'),
     ('growth_factor', 'współczynnik wzrostu'),
-    ('recovered', 'łączna liczba wyzdrowiało'),
+    ('recovered', 'łączna liczba wyzdrowiałych'),
     ('deaths', 'łączna liczba zgonów'),
 ]
