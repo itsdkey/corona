@@ -8,7 +8,7 @@ from .settings import BASE_DIR
 
 
 def build_template_index():
-    with open(os.path.join(BASE_DIR, 'index.html')) as index_file:
+    with open(os.path.join(BASE_DIR, 'index.html'), encoding='utf-8') as index_file:
         index = index_file.read()
     return index
 
