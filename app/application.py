@@ -22,11 +22,11 @@ def get_app() -> Dash:
             ),
             html.H1(children='Wykres zarażonych przez covid-19', style={'textAlign': 'center'}),
             html.Div(
-                children='Prosta aplikacja dostarczona za pomocą frameworka Dash python.',
+                children='Prosta aplikacja dostarczona za pomocą frameworka Dash python',
                 style={'textAlign': 'center'},
             ),
             html.Div(
-                children=f'Aktualizacje co {UPDATE_INTERVAL // (1000 * 60)} minut.',
+                children=f'Aktualizacje co {UPDATE_INTERVAL // (1000 * 60)} minut',
                 style={'textAlign': 'center'},
             ),
             html.Div(
