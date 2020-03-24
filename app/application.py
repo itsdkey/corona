@@ -20,15 +20,18 @@ def get_app() -> Dash:
                 interval=UPDATE_INTERVAL,
                 n_intervals=0,
             ),
-            html.H1(id='title', children='Wykres zarażonych przez covid-19', style={'textAlign': 'center'}),
+            html.H1(children='Wykres zarażonych przez covid-19', style={'textAlign': 'center'}),
             html.Div(
-                id='subtitle',
                 children='Prosta aplikacja dostarczona za pomocą frameworka Dash python.',
                 style={'textAlign': 'center'},
             ),
             html.Div(
+                children=f'Aktualizacje co {UPDATE_INTERVAL // (1000 * 60)} minut.',
+                style={'textAlign': 'center'},
+            ),
+            html.Div(
                 id='live-update-text',
-                children='Ostatnio zaktualizowano o:',
+                children='Ostatnia aktualizacja:',
                 style={'textAlign': 'center'},
             ),
             dcc.Graph(
