@@ -15,7 +15,7 @@ def update_graphs(n: int) -> Figure:
 def update_metrics(n: int) -> str:
     """Update 'update text'."""
     now = datetime.now().strftime('%d %b %Y %H:%M:%S')
-    return f'Ostatnio zaktualizowano o: {now}'
+    return f'Ostatnia aktualizacja: {now}'
 
 
 def update_datatable(n: int) -> list:
