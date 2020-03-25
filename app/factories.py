@@ -1,6 +1,7 @@
+from datetime import date
 import os
 
-from plotly.graph_objs import Figure, Scatter
+import plotly.graph_objects as go
 
 from .calculations import calculate_growth_factor
 from .handlers import read_from_csv, unpack_csv_data
@@ -13,14 +14,14 @@ def build_template_index():
     return index
 
 
-def build_cases_figure() -> Figure:
-    """Build a figure that will be used in the cases graph."""
+def build_overall_cases_figure() -> go.Figure:
+    """Build a figure that will be used in the overall cases graph."""
     csv_data = read_from_csv()
     data_sets = unpack_csv_data(csv_data)
-    figure = Figure(
+    figure = go.Figure(
         data={
             'data': [
-                Scatter(
+                go.Scatter(
                     **{
                         'x': list(data_sets['cases'].keys()),
                         'y': list(data_sets['cases'].values()),
@@ -29,7 +30,7 @@ def build_cases_figure() -> Figure:
                         'marker': {'color': 'blue'},
                     },
                 ),
-                Scatter(
+                go.Scatter(
                     **{
                         'x': list(data_sets['recovered'].keys()),
                         'y': list(data_sets['recovered'].values()),
@@ -38,7 +39,7 @@ def build_cases_figure() -> Figure:
                         'marker': {'color': '#00ff00'},
                     },
                 ),
-                Scatter(
+                go.Scatter(
                     **{
                         'x': list(data_sets['deaths'].keys()),
                         'y': list(data_sets['deaths'].values()),
@@ -49,6 +50,24 @@ def build_cases_figure() -> Figure:
                 ),
             ],
         },
+    )
+    return figure
+
+
+def build_daily_cases_figure():
+    csv_data = read_from_csv()
+    daily_cases = {
+        date.fromisoformat(key_date): value['daily_cases'] for key_date, value in csv_data.items()
+    }
+    figure = go.Figure(
+        data=go.Bar(
+            x=list(daily_cases.keys()),
+            y=list(daily_cases.values()),
+        ),
+    )
+    figure.update_layout(
+        title='Ilość nowy przypadków',
+        xaxis_tickformat='%-d %B %Y',
     )
     return figure
 

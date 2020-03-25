@@ -1,4 +1,3 @@
-from collections import OrderedDict
 import csv
 from datetime import date
 
@@ -12,17 +11,20 @@ def write_to_csv() -> None:
     past_data = read_from_csv()
     actual_data = get_actual_state()
     gathered_data = {**past_data, **actual_data}
-    field_names = ['date', 'cases', 'recovered', 'deaths']
+    field_names = ['date', 'cases', 'recovered', 'deaths', 'daily_cases']
+    cases_overall = 0
     with open('corona.csv', 'w', newline='') as csvfile:
         writer = csv.DictWriter(csvfile, fieldnames=field_names)
         writer.writeheader()
         for key, value in gathered_data.items():
-            writer.writerow({'date': key, **value})
+            daily_cases = value['cases'] - cases_overall
+            cases_overall = value['cases']
+            writer.writerow({'date': key, 'daily_cases': daily_cases, **value})
 
 
-def read_from_csv() -> OrderedDict:
+def read_from_csv() -> dict:
     """Read data from a csv file."""
-    data = OrderedDict()
+    data = {}
     with open('corona.csv', newline='') as csvfile:
         reader = csv.DictReader(csvfile)
         for row in reader:
@@ -31,6 +33,7 @@ def read_from_csv() -> OrderedDict:
                 'cases': int(row['cases']),
                 'recovered': int(row['recovered']),
                 'deaths': int(row['deaths']),
+                'daily_cases': int(row['daily_cases']),
             }
     return data
 
@@ -47,7 +50,7 @@ def get_actual_state() -> dict:
     counters = soup.find_all('div', id='maincounter-wrap')
     for html_element in counters:
         title = html_element.h1.text.lower().strip().replace(':', '')
-        value = int(html_element.div.span.text.strip())
+        value = int(html_element.div.span.text.strip().replace(',', ''))
         if 'cases' in title:
             scrapped['cases'] = value
         else:
@@ -58,7 +61,7 @@ def get_actual_state() -> dict:
     return gathered_data
 
 
-def unpack_csv_data(csv_data: OrderedDict) -> dict:
+def unpack_csv_data(csv_data: dict) -> dict:
     """Unpack data from a csv to 3 data sets.
 
     :param csv_data: data from a csv file

@@ -4,8 +4,18 @@ import dash_core_components as dcc
 import dash_html_components as html
 from dash_table import DataTable
 
-from .callbacks import update_datatable, update_graphs, update_metrics
-from .factories import build_cases_figure, build_cases_datatable_data, build_template_index
+from .callbacks import (
+    update_daily_cases_graph,
+    update_datatable,
+    update_metrics,
+    update_overall_graph,
+)
+from .factories import (
+    build_cases_datatable_data,
+    build_daily_cases_figure,
+    build_overall_cases_figure,
+    build_template_index,
+)
 from .settings import COLUMN_TRANSLATION, UPDATE_INTERVAL
 
 
@@ -20,23 +30,42 @@ def get_app() -> Dash:
                 interval=UPDATE_INTERVAL,
                 n_intervals=0,
             ),
-            html.H1(children='Wykres zarażonych przez covid-19', style={'textAlign': 'center'}),
             html.Div(
-                children='Prosta aplikacja dostarczona za pomocą frameworka Dash python',
+                className='row',
                 style={'textAlign': 'center'},
+                children=[
+                    html.H1(
+                        children='Wykres zarażonych przez covid-19',
+                    ),
+                    html.P(
+                        children='Prosta aplikacja dostarczona za pomocą frameworka Dash python',
+                    ),
+                    html.P(
+                        children=f'Aktualizacje co {UPDATE_INTERVAL // (1000 * 60)} minut',
+                    ),
+                    html.P(
+                        id='live-update-text',
+                        children='Ostatnia aktualizacja:',
+                    ),
+                ],
             ),
             html.Div(
-                children=f'Aktualizacje co {UPDATE_INTERVAL // (1000 * 60)} minut',
-                style={'textAlign': 'center'},
+                className='row',
+                children=[
+                    dcc.Graph(
+                        id='live-cases-overall-graph',
+                        figure=build_overall_cases_figure(),
+                    ),
+                ],
             ),
             html.Div(
-                id='live-update-text',
-                children='Ostatnia aktualizacja:',
-                style={'textAlign': 'center'},
-            ),
-            dcc.Graph(
-                id='live-update-graph',
-                figure=build_cases_figure(),
+                className='row',
+                children=[
+                    dcc.Graph(
+                        id='live-daily-cases-graph',
+                        figure=build_daily_cases_figure(),
+                    ),
+                ],
             ),
             html.Div(
                 DataTable(
@@ -77,9 +106,13 @@ def get_app() -> Dash:
         [Input('interval-component', 'n_intervals')],
     )(update_metrics)
     app.callback(
-        Output('live-update-graph', 'figure'),
+        Output('live-cases-overall-graph', 'figure'),
         [Input('interval-component', 'n_intervals')],
-    )(update_graphs)
+    )(update_overall_graph)
+    app.callback(
+        Output('live-daily-cases-graph', 'figure'),
+        [Input('interval-component', 'n_intervals')],
+    )(update_daily_cases_graph)
     app.callback(
         Output('live-update-datatable', 'data'),
         [Input('interval-component', 'n_intervals')],

@@ -3,6 +3,7 @@ celery[redis]
 dash
 gitlint
 isort
+plotly
 pre-commit
 python-dotenv
 requests
