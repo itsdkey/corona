@@ -1,8 +1,7 @@
-from collections import OrderedDict
 from decimal import ROUND_HALF_UP, Decimal
 
 
-def calculate_growth_factor(data: OrderedDict) -> OrderedDict:
+def calculate_growth_factor(data: dict) -> dict:
     """Calculate the growth factor.
 
     :param data: data to use
