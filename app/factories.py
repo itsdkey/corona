@@ -2,7 +2,7 @@ from datetime import date
 import os
 
 import plotly.graph_objects as go
-
+from plotly.subplots import make_subplots
 from .calculations import calculate_growth_factor
 from .handlers import read_from_csv, unpack_csv_data
 from .settings import BASE_DIR
@@ -18,38 +18,39 @@ def build_overall_cases_figure() -> go.Figure:
     """Build a figure that will be used in the overall cases graph."""
     csv_data = read_from_csv()
     data_sets = unpack_csv_data(csv_data)
-    figure = go.Figure(
-        data={
-            'data': [
-                go.Scatter(
-                    **{
-                        'x': list(data_sets['cases'].keys()),
-                        'y': list(data_sets['cases'].values()),
-                        'mode': 'lines+markers',
-                        'name': 'przypadki',
-                        'marker': {'color': 'blue'},
-                    },
-                ),
-                go.Scatter(
-                    **{
-                        'x': list(data_sets['recovered'].keys()),
-                        'y': list(data_sets['recovered'].values()),
-                        'mode': 'lines+markers',
-                        'name': 'wyleczeni',
-                        'marker': {'color': '#00ff00'},
-                    },
-                ),
-                go.Scatter(
-                    **{
-                        'x': list(data_sets['deaths'].keys()),
-                        'y': list(data_sets['deaths'].values()),
-                        'mode': 'lines+markers',
-                        'name': 'zgony',
-                        'marker': {'color': 'red'},
-                    },
-                ),
-            ],
-        },
+    figure = make_subplots(rows=2, cols=1, vertical_spacing=0.2)
+    figure.append_trace(
+        trace=go.Scatter(
+            x=list(data_sets['cases'].keys()),
+            y=list(data_sets['cases'].values()),
+            mode='lines+markers',
+            name='przypadki',
+            marker={'color': 'blue'},
+        ),
+        row=1,
+        col=1,
+    )
+    figure.append_trace(
+        trace=go.Scatter(
+            x=list(data_sets['recovered'].keys()),
+            y=list(data_sets['recovered'].values()),
+            mode='lines+markers',
+            name='wyzdrowiali',
+            marker={'color': '#00ff00'},
+        ),
+        row=2,
+        col=1,
+    )
+    figure.append_trace(
+        trace=go.Scatter(
+            x=list(data_sets['deaths'].keys()),
+            y=list(data_sets['deaths'].values()),
+            mode='lines+markers',
+            name='zgony',
+            marker={'color': 'red'},
+        ),
+        row=2,
+        col=1,
     )
     return figure
 
