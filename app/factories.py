@@ -66,7 +66,7 @@ def build_daily_cases_figure():
         ),
     )
     figure.update_layout(
-        title='Ilość nowy przypadków',
+        title='Ilość nowych przypadków z podziałem na dni',
         xaxis_tickformat='%-d %B %Y',
     )
     return figure
