@@ -1,4 +1,5 @@
 from datetime import date
+import locale
 import os
 
 import plotly.graph_objects as go
@@ -6,6 +7,8 @@ from plotly.subplots import make_subplots
 from .calculations import calculate_growth_factor
 from .handlers import read_from_csv, unpack_csv_data
 from .settings import BASE_DIR
+
+locale.setlocale(locale.LC_ALL, '')
 
 
 def build_template_index():
@@ -18,7 +21,15 @@ def build_overall_cases_figure() -> go.Figure:
     """Build a figure that will be used in the overall cases graph."""
     csv_data = read_from_csv()
     data_sets = unpack_csv_data(csv_data)
-    figure = make_subplots(rows=2, cols=1, vertical_spacing=0.2)
+    figure = make_subplots(
+        rows=2,
+        cols=1,
+        vertical_spacing=0.2,
+        subplot_titles=[
+            'Wykres ilości potwierdzonych przypadków',
+            'Wykres ilości zgonów oraz wyzdrowień',
+        ],
+    )
     figure.append_trace(
         trace=go.Scatter(
             x=list(data_sets['cases'].keys()),
@@ -58,7 +69,7 @@ def build_overall_cases_figure() -> go.Figure:
 def build_daily_cases_figure():
     csv_data = read_from_csv()
     daily_cases = {
-        date.fromisoformat(key_date): value['daily_cases'] for key_date, value in csv_data.items()
+        date.fromisoformat(key_date).strftime('%x'): value['daily_cases'] for key_date, value in csv_data.items()
     }
     figure = go.Figure(
         data=go.Bar(
@@ -68,7 +79,7 @@ def build_daily_cases_figure():
     )
     figure.update_layout(
         title='Ilość nowych przypadków z podziałem na dni',
-        xaxis_tickformat='%-d %B %Y',
+        xaxis={'type': 'category'},
     )
     return figure
 
