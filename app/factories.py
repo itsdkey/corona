@@ -4,6 +4,7 @@ import os
 
 import plotly.graph_objects as go
 from plotly.subplots import make_subplots
+
 from .calculations import calculate_growth_factor
 from .handlers import read_from_csv, unpack_csv_data
 from .settings import BASE_DIR
@@ -89,3 +90,22 @@ def build_cases_datatable_data():
     csv_data = read_from_csv()
     csv_data = calculate_growth_factor(csv_data)
     return [{'date': key, **value} for key, value in csv_data.items()]
+
+
+def build_log_graph():
+    """Generate data that will be used by the log plot."""
+    csv_data = read_from_csv()
+    cases = {
+        date.fromisoformat(key_date).strftime('%x'): value['cases'] for key_date, value in csv_data.items()
+    }
+    figure = go.Figure(
+        data=go.Scatter(
+            x=list(cases.keys()),
+            y=list(cases.values()),
+        ),
+        layout={
+            'title': 'Wykres logarytmiczny ilości przypadków w Polsce',
+            'yaxis_type': 'log',
+        },
+    )
+    return figure

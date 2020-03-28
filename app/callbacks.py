@@ -3,7 +3,11 @@ from datetime import datetime
 from plotly.graph_objs import Figure
 
 from .calculations import calculate_growth_factor
-from .factories import build_daily_cases_figure, build_overall_cases_figure
+from .factories import (
+    build_daily_cases_figure,
+    build_log_graph,
+    build_overall_cases_figure,
+)
 from .handlers import read_from_csv
 
 
@@ -28,3 +32,8 @@ def update_datatable(n: int) -> list:
     data = read_from_csv()
     data = calculate_growth_factor(data)
     return [{'date': key, **value} for key, value in data.items()]
+
+
+def update_log_graph(n: int) -> Figure:
+    """Update log graph with overall cases."""
+    return build_log_graph()
