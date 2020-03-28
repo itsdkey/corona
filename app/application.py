@@ -7,12 +7,14 @@ from dash_table import DataTable
 from .callbacks import (
     update_daily_cases_graph,
     update_datatable,
+    update_log_graph,
     update_metrics,
     update_overall_graph,
 )
 from .factories import (
     build_cases_datatable_data,
     build_daily_cases_figure,
+    build_log_graph,
     build_overall_cases_figure,
     build_template_index,
 )
@@ -68,6 +70,15 @@ def get_app() -> Dash:
                 ],
             ),
             html.Div(
+                className='row',
+                children=[
+                    dcc.Graph(
+                        id='live-log-graph',
+                        figure=build_log_graph(),
+                    ),
+                ],
+            ),
+            html.Div(
                 DataTable(
                     id='live-update-datatable',
                     style_data_conditional=[
@@ -90,8 +101,8 @@ def get_app() -> Dash:
                     },
                     style_cell={'textAlign': 'center'},
                     style_table={
-                        'overflowX': 'scroll',
                         'maxHeight': '300px',
+                        'overflowX': 'scroll',
                         'overflowY': 'scroll',
                     },
                     columns=[{'id': data_key, 'name': column_name} for data_key, column_name in COLUMN_TRANSLATION],
@@ -113,6 +124,10 @@ def get_app() -> Dash:
         Output('live-daily-cases-graph', 'figure'),
         [Input('interval-component', 'n_intervals')],
     )(update_daily_cases_graph)
+    app.callback(
+        Output('live-log-graph', 'figure'),
+        [Input('interval-component', 'n_intervals')],
+    )(update_log_graph)
     app.callback(
         Output('live-update-datatable', 'data'),
         [Input('interval-component', 'n_intervals')],
