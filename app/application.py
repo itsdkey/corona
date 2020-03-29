@@ -23,7 +23,7 @@ from .settings import COLUMN_TRANSLATION, UPDATE_INTERVAL
 
 def get_app() -> Dash:
     """Return a Dash application."""
-    app = Dash(__name__, external_stylesheets=['https://codepen.io/chriddyp/pen/dZVMbK.css'])
+    app = Dash(__name__)
     app.index_string = build_template_index()
     app.layout = html.Div(
         html.Div([
@@ -63,51 +63,60 @@ def get_app() -> Dash:
             html.Div(
                 className='row',
                 children=[
-                    dcc.Graph(
-                        id='live-daily-cases-graph',
-                        figure=build_daily_cases_figure(),
+                    html.Div(
+                        className='six columns',
+                        children=[
+                            dcc.Graph(
+                                id='live-daily-cases-graph',
+                                figure=build_daily_cases_figure(),
+                            ),
+                        ],
+                    ),
+                    html.Div(
+                        className='six columns',
+                        children=[
+                            dcc.Graph(
+                                id='live-log-graph',
+                                figure=build_log_graph(),
+                            ),
+                        ],
                     ),
                 ],
             ),
             html.Div(
                 className='row',
                 children=[
-                    dcc.Graph(
-                        id='live-log-graph',
-                        figure=build_log_graph(),
-                    ),
-                ],
-            ),
-            html.Div(
-                DataTable(
-                    id='live-update-datatable',
-                    style_data_conditional=[
-                        {
-                            'if': {'row_index': 'odd'},
-                            'backgroundColor': 'rgb(248, 248, 248)',
-                        },
-                        {
-                            'if': {
-                                'column_id': 'growth_factor',
-                                'filter_query': '{growth_factor} <= 1.1',
+                    html.H6(children='Tabela danych'),
+                    DataTable(
+                        id='live-update-datatable',
+                        style_data_conditional=[
+                            {
+                                'if': {'row_index': 'odd'},
+                                'backgroundColor': 'rgb(248, 248, 248)',
                             },
-                            'color': 'green',
+                            {
+                                'if': {
+                                    'column_id': 'growth_factor',
+                                    'filter_query': '{growth_factor} <= 1.1',
+                                },
+                                'color': 'green',
+                                'fontWeight': 'bold',
+                            },
+                        ],
+                        style_header={
+                            'backgroundColor': 'rgb(230, 230, 230)',
                             'fontWeight': 'bold',
                         },
-                    ],
-                    style_header={
-                        'backgroundColor': 'rgb(230, 230, 230)',
-                        'fontWeight': 'bold',
-                    },
-                    style_cell={'textAlign': 'center'},
-                    style_table={
-                        'maxHeight': '300px',
-                        'overflowX': 'scroll',
-                        'overflowY': 'scroll',
-                    },
-                    columns=[{'id': data_key, 'name': column_name} for data_key, column_name in COLUMN_TRANSLATION],
-                    data=build_cases_datatable_data(),
-                ),
+                        style_cell={'textAlign': 'center'},
+                        style_table={
+                            'maxHeight': '300px',
+                            'overflowX': 'scroll',
+                            'overflowY': 'scroll',
+                        },
+                        columns=[{'id': data_key, 'name': column_name} for data_key, column_name in COLUMN_TRANSLATION],
+                        data=build_cases_datatable_data(),
+                    ),
+                ],
             ),
         ]),
     )
