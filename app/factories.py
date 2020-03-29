@@ -81,6 +81,7 @@ def build_daily_cases_figure():
     figure.update_layout(
         title='Ilość nowych przypadków z podziałem na dni',
         xaxis={'type': 'category'},
+        height=300,
     )
     return figure
 
@@ -106,6 +107,7 @@ def build_log_graph():
         layout={
             'title': 'Wykres logarytmiczny ilości przypadków w Polsce',
             'yaxis_type': 'log',
+            'height': 300,
         },
     )
     return figure
