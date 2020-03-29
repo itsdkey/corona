@@ -23,7 +23,7 @@ from .settings import COLUMN_TRANSLATION, UPDATE_INTERVAL
 
 def get_app() -> Dash:
     """Return a Dash application."""
-    app = Dash(__name__, external_stylesheets=['https://codepen.io/chriddyp/pen/dZVMbK.css'])
+    app = Dash(__name__)
     app.index_string = build_template_index()
     app.layout = html.Div(
         html.Div([
