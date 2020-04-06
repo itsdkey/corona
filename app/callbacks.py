@@ -2,7 +2,6 @@ from datetime import datetime
 
 from plotly.graph_objs import Figure
 from pytz import timezone
-from redis import Redis
 
 from .calculations import calculate_growth_factor
 from .factories import (
@@ -10,7 +9,7 @@ from .factories import (
     build_log_graph,
     build_overall_cases_figure,
 )
-from .handlers import read_from_csv
+from .handlers import get_redis_instance, read_from_csv
 
 
 def update_overall_graph(n: int) -> Figure:
@@ -25,7 +24,7 @@ def update_daily_cases_graph(n: int) -> Figure:
 
 def update_metrics(n: int) -> str:
     """Update 'update text'."""
-    with Redis(db=1) as redis:
+    with get_redis_instance() as redis:
         if redis.exists('last-update-at'):
             data_collected_at = datetime.strptime(redis.get('last-update-at').decode(), '%Y-%m-%d %H:%M:%S')
         else:
