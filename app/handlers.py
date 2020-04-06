@@ -1,16 +1,18 @@
 import csv
 from datetime import date
+import json
 
 from bs4 import BeautifulSoup
+from redis import Redis
 import requests
 from requests.exceptions import ConnectionError, Timeout
 
 
-def write_to_csv() -> None:
-    """Write data to csv file."""
-    past_data = read_from_csv()
-    actual_data = get_actual_state()
-    gathered_data = {**past_data, **actual_data}
+def write_to_csv(gathered_data: dict) -> None:
+    """Write data to csv file.
+
+    :param gathered_data: data gathered during the day in Redis.
+    """
     field_names = ['date', 'cases', 'recovered', 'deaths', 'daily_cases']
     cases_overall = 0
     with open('corona.csv', 'w', newline='') as csvfile:
@@ -76,3 +78,13 @@ def unpack_csv_data(csv_data: dict) -> dict:
         datasets['deaths'][key] = value['deaths']
         datasets['recovered'][key] = value['recovered']
     return datasets
+
+
+def read_collected_data() -> dict:
+    """Read collected data from Redis or the CSV database."""
+    with Redis(db=1) as redis:
+        if redis.exists('corona-database'):
+            collected = json.loads(redis.get('corona-database').decode())
+        else:
+            collected = read_from_csv()
+    return collected
