@@ -3,10 +3,14 @@ import json
 
 from celery.utils.log import get_task_logger
 from pytz import timezone
-from redis import Redis
 
 from .celery import app
-from .handlers import get_actual_state, read_collected_data, write_to_csv
+from .handlers import (
+    get_actual_state,
+    get_redis_instance,
+    read_collected_data,
+    write_to_csv,
+)
 
 logger = get_task_logger('server')
 
@@ -23,7 +27,7 @@ def save_actual_state_in_redis() -> None:
         cases_overall = value['cases']
         gathered_data[key] = {'date': key, 'daily_cases': daily_cases, **value}
 
-    with Redis(db=1) as redis:
+    with get_redis_instance() as redis:
         pipe = redis.pipeline()
         pipe.set('corona-database', json.dumps(gathered_data))
         pipe.set('last-update-at', datetime.now(tz=timezone('Europe/Warsaw')).strftime('%Y-%m-%d %H:%M:%S'))
@@ -33,6 +37,6 @@ def save_actual_state_in_redis() -> None:
 @app.task
 def save_redis_to_file() -> None:
     """Save the collected data in Redis to a CSV file as a backup."""
-    with Redis(db=1) as redis:
+    with get_redis_instance() as redis:
         collected = json.loads(redis.get('corona-database').decode())
         write_to_csv(collected)

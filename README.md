@@ -7,7 +7,7 @@ This app gathers data every 15minutes.
 1. Flask
 2. Dash
 3. Celery
-4. Redis [Optional, you can use a different broker]
+4. Redis
 
 ## installation
 add a `.env` file with a following content:

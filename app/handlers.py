@@ -7,6 +7,8 @@ from redis import Redis
 import requests
 from requests.exceptions import ConnectionError, Timeout
 
+from .settings import REDIS_DATABASE, REDIS_PASSWORD, REDIS_SOCKET_PATH
+
 
 def write_to_csv(gathered_data: dict) -> None:
     """Write data to csv file.
@@ -82,9 +84,14 @@ def unpack_csv_data(csv_data: dict) -> dict:
 
 def read_collected_data() -> dict:
     """Read collected data from Redis or the CSV database."""
-    with Redis(db=1) as redis:
+    with get_redis_instance() as redis:
         if redis.exists('corona-database'):
             collected = json.loads(redis.get('corona-database').decode())
         else:
             collected = read_from_csv()
     return collected
+
+
+def get_redis_instance() -> Redis:
+    """Return a Redis instance with the proper configuration."""
+    return Redis(db=REDIS_DATABASE, unix_socket_path=REDIS_SOCKET_PATH, password=REDIS_PASSWORD)
