@@ -6,7 +6,7 @@ import plotly.graph_objects as go
 from plotly.subplots import make_subplots
 
 from .calculations import calculate_growth_factor
-from .handlers import read_from_csv, unpack_csv_data
+from .handlers import read_collected_data, unpack_csv_data
 from .settings import BASE_DIR
 
 locale.setlocale(locale.LC_ALL, '')
@@ -20,7 +20,7 @@ def build_template_index():
 
 def build_overall_cases_figure() -> go.Figure:
     """Build a figure that will be used in the overall cases graph."""
-    csv_data = read_from_csv()
+    csv_data = read_collected_data()
     data_sets = unpack_csv_data(csv_data)
     figure = make_subplots(
         rows=2,
@@ -68,7 +68,7 @@ def build_overall_cases_figure() -> go.Figure:
 
 
 def build_daily_cases_figure():
-    csv_data = read_from_csv()
+    csv_data = read_collected_data()
     daily_cases = {
         date.fromisoformat(key_date).strftime('%x'): value['daily_cases'] for key_date, value in csv_data.items()
     }
@@ -88,14 +88,14 @@ def build_daily_cases_figure():
 
 def build_cases_datatable_data():
     """Generate data that will be used in the cases DataTable."""
-    csv_data = read_from_csv()
+    csv_data = read_collected_data()
     csv_data = calculate_growth_factor(csv_data)
     return [{'date': key, **value} for key, value in csv_data.items()]
 
 
 def build_log_graph():
     """Generate data that will be used by the log plot."""
-    csv_data = read_from_csv()
+    csv_data = read_collected_data()
     cases = {
         date.fromisoformat(key_date).strftime('%x'): value['cases'] for key_date, value in csv_data.items()
     }
