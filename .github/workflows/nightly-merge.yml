@@ -2,7 +2,7 @@ name: 'Nightly Merge'
 
 on:
   schedule:
-    - cron:  '50 19 * * *'
+    - cron:  '0 20 * * *'
 
 jobs:
   nightly-merge:
@@ -10,24 +10,6 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Commit corona.csv
-        uses: stefanzweifel/git-auto-commit-action@v4.1.2
-        with:
-          commit_message: Save corona.csv to repo
-
-          branch: 'development'
-
-          # Optional git params
-          commit_options: '--no-verify --signoff'
-
-          # Optional glob pattern of files which should be added to the commit
-          file_pattern: corona.csv
-
-          # Optional commit user and author settings
-          commit_user_name: My GitHub Actions Bot
-          commit_user_email: my-github-actions-bot@example.org
-          commit_author: Author <actions@github.com>
-
       - name: Checkout
         uses: actions/checkout@v2
         with:
