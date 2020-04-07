@@ -2,7 +2,7 @@ name: 'Nightly Merge'
 
 on:
   schedule:
-    - cron:  '10 0 * * *'
+    - cron:  '*/5 0 * * *'
 
 jobs:
   nightly-merge:
@@ -12,8 +12,6 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v2
-        with:
-          ref: 'development'
 
       - name: Nightly Merge (development -> master)
         uses: robotology/gh-action-nightly-merge@v1.2.0
