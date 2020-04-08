@@ -3,13 +3,13 @@ from datetime import datetime
 from plotly.graph_objs import Figure
 from pytz import timezone
 
-from .calculations import calculate_growth_factor
 from .factories import (
     build_daily_cases_figure,
     build_log_graph,
     build_overall_cases_figure,
+    build_cases_datatable_data,
 )
-from .handlers import get_redis_instance, read_from_csv
+from .handlers import get_redis_instance
 
 
 def update_overall_graph(n: int) -> Figure:
@@ -35,9 +35,7 @@ def update_metrics(n: int) -> str:
 
 def update_datatable(n: int) -> list:
     """Update data table."""
-    data = read_from_csv()
-    data = calculate_growth_factor(data)
-    return [{'date': key, **value} for key, value in data.items()]
+    return build_cases_datatable_data()
 
 
 def update_log_graph(n: int) -> Figure:
