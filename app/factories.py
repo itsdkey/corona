@@ -12,7 +12,8 @@ from .settings import BASE_DIR
 locale.setlocale(locale.LC_ALL, '')
 
 
-def build_template_index():
+def build_template_index() -> str:
+    """Return the index.html for the dash app."""
     with open(os.path.join(BASE_DIR, 'index.html'), encoding='utf-8') as index_file:
         index = index_file.read()
     return index
@@ -67,7 +68,7 @@ def build_overall_cases_figure() -> go.Figure:
     return figure
 
 
-def build_daily_cases_figure():
+def build_daily_cases_figure() -> go.Figure:
     csv_data = read_collected_data()
     daily_cases = {
         date.fromisoformat(key_date).strftime('%x'): value['daily_cases'] for key_date, value in csv_data.items()
@@ -86,14 +87,14 @@ def build_daily_cases_figure():
     return figure
 
 
-def build_cases_datatable_data():
+def build_cases_datatable_data() -> list:
     """Generate data that will be used in the cases DataTable."""
     csv_data = read_collected_data()
     csv_data = calculate_growth_factor(csv_data)
     return [{'date': key, **value} for key, value in csv_data.items()]
 
 
-def build_log_graph():
+def build_log_graph() -> go.Figure:
     """Generate data that will be used by the log plot."""
     csv_data = read_collected_data()
     cases = {
