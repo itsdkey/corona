@@ -97,7 +97,7 @@ def get_app() -> Dash:
                             {
                                 'if': {
                                     'column_id': 'growth_factor',
-                                    'filter_query': '{growth_factor} <= 1.1',
+                                    'filter_query': '{growth_factor} <= 1.05',
                                 },
                                 'color': 'green',
                                 'fontWeight': 'bold',

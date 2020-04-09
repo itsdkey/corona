@@ -91,7 +91,7 @@ def build_cases_datatable_data() -> list:
     """Generate data that will be used in the cases DataTable."""
     csv_data = read_collected_data()
     csv_data = calculate_growth_factor(csv_data)
-    return [{'date': key, **value} for key, value in csv_data.items()]
+    return list(reversed([{'date': key, **value} for key, value in csv_data.items()]))
 
 
 def build_log_graph() -> go.Figure:
