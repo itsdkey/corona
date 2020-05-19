@@ -53,12 +53,16 @@ def get_actual_state() -> dict:
     soup = BeautifulSoup(response.content, 'html.parser')
     counters = soup.find_all('div', id='maincounter-wrap')
     for html_element in counters:
+        if not html_element.h1:
+            continue
+
         title = html_element.h1.text.lower().strip().replace(':', '')
         value = int(html_element.div.span.text.strip().replace(',', ''))
         if 'cases' in title:
             scrapped['cases'] = value
         else:
-            scrapped[title] = int(value)
+            scrapped[title] = value
+
     gathered_data = {
         str(date.today()): scrapped,
     }
