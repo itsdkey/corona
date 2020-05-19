@@ -38,5 +38,8 @@ def save_actual_state_in_redis() -> None:
 def save_redis_to_file() -> None:
     """Save the collected data in Redis to a CSV file as a backup."""
     with get_redis_instance() as redis:
-        collected = json.loads(redis.get('corona-database').decode())
+        try:
+            collected = json.loads(redis.get('corona-database').decode())
+        except AttributeError:
+            return
         write_to_csv(collected)
